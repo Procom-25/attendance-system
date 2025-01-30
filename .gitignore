@@ -1,0 +1,15 @@
+node_modules/
+venv/
+
+# Ignore log files and cache
+*.log
+__pycache__/
+
+# Ignore environment files
+.env
+*.config
+
+# Ignore compiled files
+*.class
+*.o
+*.exe
