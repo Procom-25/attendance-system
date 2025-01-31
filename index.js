@@ -10,7 +10,9 @@ import adminRoutes from './routes/adminRoutes.js'
 connectdb();
 const app=express();
 app.use(cors());
+
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}))
 app.use('/user',userRoutes);
 app.use('/admin',adminRoutes);
 app.get('/',(req,res)=>{

@@ -1,5 +1,52 @@
-import Event from "../models/eventModel.js"
-import isInsideAnyArea from "../utils/verifyLocation.js"
-export const markAttendance=(req,res)=>{
+import Event from "../models/eventModel.js";
+import isInsideAnyArea from "../utils/verifyLocation.js";
 
-}
+export const markAttendance = async (req, res) => {
+  const teams = req.body;
+  let notUpdatedTeams = [];
+  try {
+    const updatePromises = teams.map(async (team) => {
+      const updatedEvent = await Event.findOneAndUpdate(
+        { "registeredTeams.team_code": team.team_code },
+        { $set: { "registeredTeams.$.is_present": team.present } }, 
+        { new: true }
+      );
+      if (!updatedEvent) {
+        notUpdatedTeams.push(team.team_name);
+      }
+    });
+    await Promise.all(updatePromises); 
+    if (teams.length === notUpdatedTeams.length) {
+      return res
+        .status(404)
+        .send({ message: "Invalid codes: Teams with these codes don't exist" });
+    } else if (notUpdatedTeams.length === 0) {
+      return res
+        .status(201)
+        .send({ message: "Attendance marked successfully" });
+    } else {
+      return res
+        .status(201)
+        .send({
+          notUpdatedTeams,
+          message: "These teams were not marked present",
+        });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: "Internal Server Error" });
+  }
+};
+export const getTeams = async (req, res) => {
+  const eventId = req.params.eventId;
+  try {
+    const teams = await Event.find({ _id: eventId }, { registeredTeams: 1 });
+    if (!teams || teams.length === 0) {
+      return res.status(404).send({ message: "Teams not found" });
+    }
+    return res.json(teams);
+  } catch (error) {
+    return res.status(500).send({ message: "Internal Server Error" });
+  }
+};
+export const getEvents=
