@@ -38,7 +38,7 @@ export const markAttendance = async (req, res) => {
 export const getTeams = async (req, res) => {
   const eventId = req.params.eventId;
   try {
-    const teams = await Event.find({ _id: eventId }, { registeredTeams: 1 });
+    const teams = await Event.find({ _id: eventId }, { title:1,registeredTeams: 1 });
     if (!teams || teams.length === 0) {
       return res.status(404).send({ message: "Teams not found" });
     }
