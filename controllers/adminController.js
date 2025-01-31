@@ -74,3 +74,19 @@ export const updateEventTime = async (req, res) => {
     return res.status(500).send({ message: "Internal Server Error" });
   }
 };
+
+export const getAllTeams = async (req, res) => {
+ // const eventId = req.params.eventId;
+  try {
+    const teams = await Event.find(
+    {},
+      { title: 1, registeredTeams: 1 }
+    );
+    if (!teams || teams.length === 0) {
+      return res.status(404).send({ message: "Teams not found" });
+    }
+    return res.json(teams);
+  } catch (error) {
+    return res.status(500).send({ message: "Internal Server Error" });
+  }
+};
