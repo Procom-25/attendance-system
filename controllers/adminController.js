@@ -38,7 +38,10 @@ export const markAttendance = async (req, res) => {
 export const getTeams = async (req, res) => {
   const eventId = req.params.eventId;
   try {
-    const teams = await Event.find({ _id: eventId }, { title:1,registeredTeams: 1 });
+    const teams = await Event.find(
+      { _id: eventId },
+      { title: 1, registeredTeams: 1 }
+    );
     if (!teams || teams.length === 0) {
       return res.status(404).send({ message: "Teams not found" });
     }
@@ -66,8 +69,8 @@ export const updateEventTime = async (req, res) => {
       { $set: { eventStartTime: eventStartTime, eventEndTime: eventEndTime } },
       { new: true }
     );
-    if(!updatedEvent){
-        return res.status(404).send({message:"Teams Not found"});
+    if (!updatedEvent) {
+      return res.status(404).send({ message: "Teams Not found" });
     }
     return res.json(updatedEvent);
   } catch (error) {
@@ -76,11 +79,15 @@ export const updateEventTime = async (req, res) => {
 };
 
 export const getAllTeams = async (req, res) => {
- // const eventId = req.params.eventId;
   try {
     const teams = await Event.find(
-    {},
-      { title: 1, registeredTeams: 1 }
+      {},
+      {
+        title: 1,
+        "registeredTeams.team_name": 1,
+        "registeredTeams.member.name": 1,
+        "registeredTeams.is_present": 1,
+      }
     );
     if (!teams || teams.length === 0) {
       return res.status(404).send({ message: "Teams not found" });
