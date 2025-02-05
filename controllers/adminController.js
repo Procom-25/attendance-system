@@ -87,6 +87,7 @@ export const getAllTeams = async (req, res) => {
         "registeredTeams.team_name": 1,
         "registeredTeams.member.name": 1,
         "registeredTeams.is_present": 1,
+        "registeredTeams.team_code":1
       }
     );
     if (!teams || teams.length === 0) {
