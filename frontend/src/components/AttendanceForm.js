@@ -1,13 +1,54 @@
-import React, { useState } from 'react';
-import './AttendanceForm.css';
+import React, { useState } from "react";
+import "./AttendanceForm.css";
+import axios from "axios";
 
 const AttendanceForm = () => {
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState("");
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const getLocation = () => {
+    return new Promise((resolve, reject) => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            resolve({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+          },
+          (err) => {
+            setError(err.message);
+            reject(err);
+          }
+        );
+      } else {
+        setError("Geolocation is not supported by your browser");
+       
+      }
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('Submitted code:', code);
+    try {
+      const location = await getLocation();
+      console.log("Submitted code:", code);
+      console.log("Location:", location);
+
+      const response = await axios.post("http://localhost:5000/user/verify", {
+        teamcode: code,
+        longitude: location.longitude,
+        latitude: location.latitude, 
+      });
+
+      alert(response.data.message)
+      setError('')
+      setCode('')
+    } catch (err) {
+      setError("Error submitting data: " + err.message);
+      setCode("");
+    }
   };
 
   return (
@@ -24,8 +65,8 @@ const AttendanceForm = () => {
           />
           <button type="submit">SUBMIT</button>
         </form>
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
-
       <div className="help-button">
         <button className="help-icon">?</button>
       </div>
@@ -33,4 +74,4 @@ const AttendanceForm = () => {
   );
 };
 
-export default AttendanceForm; 
+export default AttendanceForm;
