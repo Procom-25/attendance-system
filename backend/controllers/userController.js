@@ -7,9 +7,6 @@ export const verify = async (req, res) => {
     if (!teamcode || longitude == null || latitude == null) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-
-    console.log("Verifying team presence:", { teamcode });
-
     const currentTime = new Date();
     const event = await Event.findOne({
       "registeredTeams.team_code": teamcode,
