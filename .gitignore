@@ -1,15 +1,28 @@
+# Dependencies
 node_modules/
+frontend/node_modules/
+backend/node_modules/
 venv/
 
 # Ignore log files and cache
 *.log
 __pycache__/
 
-# Ignore environment files
+# Environment files
 .env
 *.config
+
+# Build files
+build/
+dist/
+frontend/build/
+frontend/dist/
 
 # Ignore compiled files
 *.class
 *.o
 *.exe
+
+# IDE files
+.vscode/
+.idea/
