@@ -31,7 +31,7 @@ const AttendanceForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await g();
+  
     try {
       const location = await getLocation();
       console.log("Submitted code:", code);
