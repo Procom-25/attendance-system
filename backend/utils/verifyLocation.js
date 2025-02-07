@@ -6,7 +6,7 @@ const eeArea = [
   [24.856285, 67.263877],
   [24.856208, 67.263584],[(24.856919, 67.263406)],[(24.857002, 67.263699)],
 ];
-
+// RAY Casting Algorithm 
 const isPointInPolygon = (x, y, polygon) => {
   let inside = false;
   let n = polygon.length;
