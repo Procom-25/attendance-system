@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./AttendanceForm.css";
 import axios from "axios";
 // import dotenv from 'dotenv'
-import { g } from "../data/Data";
+
 // dotenv.config()
 const AttendanceForm = () => {
   const [code, setCode] = useState("");
