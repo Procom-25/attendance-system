@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import "./AttendanceForm.css";
 import axios from "axios";
-
+// import dotenv from 'dotenv'
+import { g } from "../data/Data";
+// dotenv.config()
 const AttendanceForm = () => {
   const [code, setCode] = useState("");
   const [error, setError] = useState(null);
@@ -23,14 +25,13 @@ const AttendanceForm = () => {
         );
       } else {
         setError("Geolocation is not supported by your browser");
-       
       }
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    await g();
     try {
       const location = await getLocation();
       console.log("Submitted code:", code);
@@ -39,12 +40,12 @@ const AttendanceForm = () => {
       const response = await axios.post("http://localhost:5000/user/verify", {
         teamcode: code,
         longitude: location.longitude,
-        latitude: location.latitude, 
+        latitude: location.latitude,
       });
 
-      alert(response.data.message)
-      setError('')
-      setCode('')
+      alert(response.data.message);
+      setError("");
+      setCode("");
     } catch (err) {
       setError("Error submitting data: " + err.message);
       setCode("");

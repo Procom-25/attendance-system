@@ -10,6 +10,7 @@
     "ajv-keywords": "5.1.0",
     "axios": "^1.7.9",
     "cra-template": "1.2.0",
+    "dotenv": "^16.4.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.0",

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './BackupAttendanceForm.css';
-import { getCompetitionData, updateCompetitionData } from '../data/sampleData';
+import { getCompetitionData, updateCompetitionData } from '../data/Data';
 
 const BackupAttendanceForm = () => {
   const [searchTerm, setSearchTerm] = useState('');

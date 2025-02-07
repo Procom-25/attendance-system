@@ -1,3 +1,6 @@
+//import axios from 'axios'
+// import dotenv from 'dotenv'
+// dotenv.config()
 let competitionDataStore = [
   {
     _id: "67a27a48e26ae194dfac849a",
@@ -79,7 +82,20 @@ let competitionDataStore = [
 ];
 
 export const getCompetitionData = () => competitionDataStore;
-
+// export const getCompetitionData =async () => {
+//  try {
+//      const response = await axios.get("http://localhost:5000/admin");
+//      //console.log(response.data);
+//      return response.data
+//    } catch (err) {
+//      console.log(err);
+//      return []
+//    }
+// };
+// remove comment in production and add backend uri accordingly
+export const g=async()=>{
+  
+}
 export const updateCompetitionData = (newData) => {
   competitionDataStore = newData;
   return competitionDataStore;
