@@ -184,4 +184,113 @@ input:checked + .slider:before {
   background: #1976d2;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom dropdown styles */
+.search-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: stretch;
+}
+
+.search-input {
+  flex: 3;
+  width: auto;
+  height: 48px;
+  padding: 0 20px;
+  background: #f8f9fa;
+  border: none;
+  border-radius: 12px;
+  color: #1e88e5;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #90caf9;
+  font-weight: 400;
+}
+
+.custom-dropdown {
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
+  position: relative;
+}
+
+.dropdown-button {
+  width: 100%;
+  height: 48px;
+  padding: 0 20px;
+  background: #f8f9fa;
+  border: none;
+  border-radius: 12px;
+  color: #90caf9;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  outline: none;
+  text-transform: none;
+}
+
+.dropdown-button:after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #90caf9;
+  border-bottom: 2px solid #90caf9;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+  margin-right: 6px;
+}
+
+.dropdown-button.open:after {
+  transform: rotate(-135deg);
+}
+
+.dropdown-list {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  right: 0;
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+  z-index: 1000;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.dropdown-list.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  color: #90caf9;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.dropdown-item.selected {
+  color: #1e88e5;
+  font-weight: 600;
 } 
