@@ -48,18 +48,23 @@ export const updateTeamData = (teamCode, isPresent) => {
   return teamsDataStore;
 };
 
-// Search teams by name, code, or member name
 export const searchTeams = (searchTerm) => {
+  const term = searchTerm.toLowerCase();
   return teamsDataStore.filter(team =>
-    team.team_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    team.team_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    team.member.some(m => m.toLowerCase().includes(searchTerm.toLowerCase()))
+    team.team_name.toLowerCase().includes(term) ||
+    team.team_code.toLowerCase().includes(term) ||
+    team.member.some(m => m.toLowerCase().includes(term)) ||
+    team.competition_name.toLowerCase().includes(term)
   );
 };
 
-// For future API implementation
+export const getCompetitions = () => {
+  const competitions = new Set(teamsDataStore.map(team => team.competition_name));
+  return Array.from(competitions);
+};
+
 export const g = async () => {
-  // Implementation here
+
 };
 
 export const updateCompetitionData = (newData) => {
