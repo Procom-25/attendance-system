@@ -8,7 +8,7 @@ export const markAttendance = async (req, res) => {
     const updatePromises = teams.map(async (team) => {
       const updatedEvent = await Event.findOneAndUpdate(
         { "registeredTeams.team_code": team.team_code },
-        { $set: { "registeredTeams.$.is_present": team.present } },
+        { $set: { "registeredTeams.$.is_present": team.is_present } },
         { new: true }
       );
       if (!updatedEvent) {
@@ -80,21 +80,26 @@ export const updateEventTime = async (req, res) => {
 
 export const getAllTeams = async (req, res) => {
   try {
-    const teams = await Event.find(
-      {},
-      {
-        title: 1,
-        "registeredTeams.team_name": 1,
-        "registeredTeams.member.name": 1,
-        "registeredTeams.is_present": 1,
-        "registeredTeams.team_code":1
-      }
-    );
+    const teams = await Event.find({}, { title: 1, registeredTeams: 1 });
+
     if (!teams || teams.length === 0) {
       return res.status(404).send({ message: "Teams not found" });
     }
-    return res.json(teams);
+
+    const structured_data = teams.flatMap(
+      (event) =>
+        event.registeredTeams?.map((team) => ({
+          team_name: team.team_name,
+          team_code: team.team_code,
+          is_present: team.is_present,
+          member: team.member?.map((m) => m.name) || [],
+          competition_name: event.title,
+        })) || []
+    );
+
+    return res.json(structured_data);
   } catch (error) {
+    console.error("Error fetching teams:", error);
     return res.status(500).send({ message: "Internal Server Error" });
   }
 };

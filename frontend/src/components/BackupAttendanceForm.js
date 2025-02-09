@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './BackupAttendanceForm.css';
 import { getTeamsData, updateTeamData, getCompetitions } from '../data/Data';
-
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 const BackupAttendanceForm = () => {
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('');
   const [teams, setTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState(null);
@@ -11,14 +13,14 @@ const BackupAttendanceForm = () => {
   const [selectedCompetition, setSelectedCompetition] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-
+  const [updatedTeams,setUpdatedTeams]=useState([])
   useEffect(() => {
-    const data = getTeamsData();
-    setTeams(data);
-    setCompetitions(getCompetitions());
+    const fetchTeams = async () => {
+      const data = await getTeamsData();
+      setTeams(Array.isArray(data) ? data : []); 
+    };
+    fetchTeams();
   }, []);
-
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -37,12 +39,11 @@ const BackupAttendanceForm = () => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-
   const handleCompetitionSelect = (competition) => {
     setSelectedCompetition(competition);
+    console.log(selectedCompetition);
     setIsDropdownOpen(false);
   };
-
   const filteredTeams = teams.filter(team => {
     const matchesSearch = 
       team.team_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -60,18 +61,49 @@ const BackupAttendanceForm = () => {
     setSelectedTeam(team);
   };
 
-  const handleAttendanceToggle = (team) => {
-    const updatedTeams = updateTeamData(team.team_code, !team.is_present);
-    setTeams(updatedTeams);
-    setHasChanges(true);
-  };
+   const handleAttendanceToggle = (team) => {
+     const updatedPresence = !team.is_present;
+     const existingIndex = updatedTeams.findIndex(
+       (t) => t.team_code === team.team_code
+     );
+     let newUpdatedTeams;
 
-  const handleSave = () => {
-    // In production, this would make an API call
-    console.log('Updated Teams:', teams);
-    setHasChanges(false);
-    alert('Attendance changes saved successfully!');
-  };
+     if (existingIndex !== -1) {
+       newUpdatedTeams = [...updatedTeams];
+       newUpdatedTeams[existingIndex].is_present = updatedPresence;
+     } else {
+       newUpdatedTeams = [
+         ...updatedTeams,
+         { team_code: team.team_code, is_present: updatedPresence },
+       ];
+     }
+
+     setUpdatedTeams(newUpdatedTeams);
+     const updatedTeamsList = teams.map((t) =>
+       t.team_code === team.team_code
+         ? { ...t, is_present: updatedPresence }
+         : t
+     );
+     console.log(updatedTeams);
+     setTeams(updatedTeamsList);
+     setHasChanges(true);
+   };
+
+ const handleSave = async () => {
+   try {
+     const response = await axios.post(
+       "http://localhost:5000/admin/attendance",
+       updatedTeams
+     );
+     alert(response.data.message || "Attendance changes saved successfully!");
+     setHasChanges(false);
+     navigate("/backup/8f3da5b1e6c4d2a9");
+   } catch (error) {
+     console.error("Error in Marking Attendance", error);
+     alert("Failed to save attendance: " + error.message);
+   }
+ };
+
 
   return (
     <div className="attendance-container">
