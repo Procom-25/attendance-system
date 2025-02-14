@@ -3,10 +3,11 @@ import isInsideAnyArea from "../utils/verifyLocation.js";
 
 export const verify = async (req, res) => {
   try {
-    const { teamcode, longitude, latitude } = req.body;
+    const { teamcode, latitude, longitude } = req.body;
     if (!teamcode || longitude == null || latitude == null) {
       return res.status(400).json({ message: "Missing required fields" });
     }
+
     const currentTime = new Date();
     const event = await Event.findOne({
       "registeredTeams.team_code": teamcode,
@@ -27,8 +28,9 @@ export const verify = async (req, res) => {
     if (teamIndex === -1) {
       return res.status(404).json({ message: "Team Not Found" });
     }
+    const isInside = await isInsideAnyArea(latitude, longitude);
 
-    if (!(await isInsideAnyArea(longitude, latitude))) {
+    if (!isInside) {
       return res
         .status(403)
         .json({ message: "You are not inside the valid event location" });
